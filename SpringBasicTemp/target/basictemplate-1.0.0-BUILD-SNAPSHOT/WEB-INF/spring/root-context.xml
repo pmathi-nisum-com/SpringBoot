@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+		<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+	        <property name="driverClassName"  value="oracle.jdbc.driver.OracleDriver"></property>  
+	        <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"></property>  
+	        <property name="username" value="pavani"></property>  
+	        <property name="password" value="root"></property>  
+    	</bean> 
+    	
+	<!-- Hibernate 4 SessionFactory Bean definition -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>com.spring.basictemplate.beans.Customer_dup</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+    	
+    	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+    		<property name="sessionFactory" ref="sessionFactory"></property> 
+    	</bean>
+    	
+		<bean id="customerDao" class="com.spring.basictemplate.dao.CustomerDaoImpl">
+    		<property name="sessionFactory" ref="sessionFactory"></property> 
+    	</bean>
+    	
+    	<bean id="customerService" class="com.spring.basictemplate.services.CustomerServiceImpl">
+    		<property name="customerDao" ref="customerDao"></property> 
+    	</bean>
+</beans>
